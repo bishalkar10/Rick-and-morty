@@ -1,0 +1,44 @@
+.filterForm {
+  position: absolute;
+  top: 60px;
+  right: 50%;
+  transform: translateX(50%);
+  width: max-content;
+  padding: 30px 10px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  row-gap: 10px;
+  column-gap: 20px;
+  background-color: var(--COLOR-SEVEN);
+}
+
+.inputField {
+  padding: 10px;
+  font-family: inherit;
+  width: 130px;
+}
+.searchButtonWrapper {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.searchButtonWrapper button {
+  height: 100%;
+  aspect-ratio: 1/1;
+  background-color: white;
+  border: none;
+  border-radius: 5px;
+}
+.searchButtonWrapper button .icon {
+  font-size: 1.25em;
+}
+
+@media screen and (min-width: 500px) {
+  .inputField {
+    width: 200px;
+  }
+  .filterForm {
+    right: 50px;
+    transform: translateX(0);
+  }
+}

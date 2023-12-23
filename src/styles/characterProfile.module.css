@@ -1,0 +1,76 @@
+.characterProfile {
+  min-height: 100vh;
+  width: 100%;
+  background-color: var(--COLOR-FOUR);
+  color: black;
+  padding: 50px 20px;
+}
+
+.characterProfile h1 {
+  font-size: 20px;
+  margin: 80px 0 20px 0;
+  text-transform: uppercase;
+  text-align: center;
+  font-family: "Inter", sans-serif;
+}
+
+.characterInfo {
+  padding: 20px;
+  max-width: 500px;
+  margin: 100px auto 40px auto;
+  background-color: var(--COLOR-FIVE);
+  border-radius: 10px;
+  position: relative;
+  box-shadow: 0 0 0px 20px rgba(0, 0, 0, 0.25);
+}
+
+.characterInfo .image {
+  width: 150px;
+  height: auto;
+  position: absolute;
+  box-shadow: 0px 10px 10px 0px rgba(0, 0, 0, 0.3);
+  border-radius: 50%;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+.characterInfo .info {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  grid-gap: 10px;
+  font-family: "Inter", sans-serif;
+  margin-bottom: 10px;
+}
+.toggleButton {
+  padding: 10px 20px;
+  border: none;
+  background: var(--COLOR-TWO);
+  color: white;
+  border-radius: 5px;
+  margin: 0 0 20px 20px;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  font-family: inherit;
+}
+.toggleButton:active {
+  background-color: var(--COLOR-ONE);
+}
+.unorderedList {
+  list-style: none;
+  padding-left: 40px;
+}
+.unorderedList li {
+  margin-bottom: 10px;
+}
+
+.rotateDown {
+  transform: rotate(90deg);
+  transition: all 0.1s ease-in-out;
+}
+
+.rotateBack {
+  transform: rotate(0deg);
+  transition: all 0.1s ease-in-out;
+}

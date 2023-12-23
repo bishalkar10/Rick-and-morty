@@ -1,0 +1,32 @@
+header {
+  width: 100%;
+  height: 60px;
+  position: relative;
+}
+.nav {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 20px;
+  background-color: var(--COLOR-TWO);
+}
+.nav h1 {
+  color: white;
+}
+
+.filterButtonWrapper {
+  width: 30px;
+  aspect-ratio: 1/1;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+}
+@media screen and (min-width: 700px) {
+  .nav {
+    padding: 0 50px;
+  }
+}

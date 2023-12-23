@@ -1,0 +1,17 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+:root {
+  font-family: "Inter", sans-serif;
+  --COLOR-ONE: #0d1b2a;
+  --COLOR-TWO: #1b263b;
+  --COLOR-THREE: #415a77;
+  --COLOR-FOUR: #778da9;
+  --COLOR-FIVE: #e0e1dd;
+  --COLOR-SIX: #ced4da;
+  --COLOR-SEVEN: #1c2321;
+}
