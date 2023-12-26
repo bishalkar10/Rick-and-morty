@@ -5,41 +5,38 @@ import FilterContext from '../store/context/filterContext';
 import characterContext from '../store/context/charactersContext';
 import axios from 'axios';
 import Navbar from '../components/Navbar';
-const API = (function () {
 
-  async function getMoreCharacters(callback, filters, page) {
-    try {
-      const url = `https://rickandmortyapi.com/api/character/`;
-      const options = {
-        params: {
-          ...filters,
-          page: page,
-        },
-        headers: {
-          accept: "application/json",
-        },
-      };
-      const res = await axios.get(url, options)
-      // if the status is 200 then call the callback function and pass the data to it
-      if (res.status === 200) {
-        callback(res.data.results)
-      }
-      else if (res.status === 404) {
-        throw Error("404 Not Found")
-      }
-      else {
-        throw Error("Unknown Error")
-      }
-    } catch (error) {
 
-      // handle the error and show it to user
-      // console.log(error.message) 
+async function getMoreCharacters(callback, filters, page) {
+  try {
+    const url = `https://rickandmortyapi.com/api/character/`;
+    const options = {
+      params: {
+        ...filters,
+        page: page,
+      },
+      headers: {
+        accept: "application/json",
+      },
+    };
+    const res = await axios.get(url, options)
+    // if the status is 200 then call the callback function and pass the data to it
+    if (res.status === 200) {
+      callback(res.data.results)
     }
+    else if (res.status === 404) {
+      throw Error("404 Not Found")
+    }
+    else {
+      throw Error("Unknown Error")
+    }
+  } catch (error) {
+
+    // handle the error and show it to user
+    // console.log(error.message) 
   }
-  return {
-    getMoreCharacters,
-  }
-})()
+}
+
 
 export default function Characters() {
   const { filters, page, setPage } = useContext(FilterContext)
@@ -48,39 +45,40 @@ export default function Characters() {
 
   useEffect(() => {
 
-    API.getMoreCharacters((newCharacters) => {
+    getMoreCharacters((newCharacters) => {
       setCharacters((prevCharacters) => [...prevCharacters, ...newCharacters]);
     }, filters, page)
+    // setPage and setCharacters are included here dure es-lint warning
+  }, [filters, page])
+
+  useEffect(() => {
     const handlePageEnd = () => setPage((prevPage) => prevPage + 1);
 
     const Scroll = (() => {
       let isLoading = false;
-      let debounceTimeout;
 
       // handlescrole funtionality
       function handleScroll() {
         if (isLoading) return;
 
-        if (debounceTimeout) {
-          clearTimeout(debounceTimeout);
+        const scrollTop =
+          document.documentElement?.scrollTop || document.body.scrollTop;
+        const scrollHeight =
+          document.documentElement?.scrollHeight || document.body.scrollHeight;
+        const clientHeight =
+          document.documentElement?.clientHeight || window.innerHeight;
+        const scrollToBottom =
+          Math.ceil(scrollTop + clientHeight + 200) >= scrollHeight;
+
+        if (scrollToBottom) {
+          isLoading = true;
+
+          // call the handlePageEnd function and increase the page number by 1 and then set the isLoading to false after 1 second
+          handlePageEnd();
+          setTimeout(() => {
+            isLoading = false;
+          }, 1000);
         }
-
-        debounceTimeout = setTimeout(() => {
-          const scrollTop = document.documentElement?.scrollTop || document.body.scrollTop;
-          const scrollHeight = document.documentElement?.scrollHeight || document.body.scrollHeight;
-          const clientHeight = document.documentElement?.clientHeight || window.innerHeight;
-          const scrollToBottom = Math.ceil(scrollTop + clientHeight + 200) >= scrollHeight;
-
-          if (scrollToBottom) {
-            isLoading = true;
-
-            // call the handlePageEnd function and increase the page number by 1 and then set the isLoading to false after 1 second
-            handlePageEnd();
-            setTimeout(() => {
-              isLoading = false;
-            }, 1000);
-          }
-        }, 200); // Debounce for 200 milliseconds
       }
       return {
         handleScroll,
@@ -93,9 +91,7 @@ export default function Characters() {
     return () => {
       window.removeEventListener("scroll", Scroll.handleScroll);
     };
-
-    // setPage and setCharacters are included here dure es-lint warning
-  }, [filters, page, setCharacters, setPage])
+  }, []);
 
   // filter out the characters which are already present in the characters array
   const uniqueNewCharacters = characters
