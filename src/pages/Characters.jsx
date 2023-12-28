@@ -7,37 +7,6 @@ import axios from 'axios';
 import Navbar from '../components/Navbar';
 
 
-async function getMoreCharacters(callback, filters, page) {
-  try {
-    const url = `https://rickandmortyapi.com/api/character/`;
-    const options = {
-      params: {
-        ...filters,
-        page: page,
-      },
-      headers: {
-        accept: "application/json",
-      },
-    };
-    const res = await axios.get(url, options)
-    // if the status is 200 then call the callback function and pass the data to it
-    if (res.status === 200) {
-      callback(res.data.results)
-    }
-    else if (res.status === 404) {
-      throw Error("404 Not Found")
-    }
-    else {
-      throw Error("Unknown Error")
-    }
-  } catch (error) {
-
-    // handle the error and show it to user
-    // console.log(error.message) 
-  }
-}
-
-
 export default function Characters() {
   const { filters, page, setPage } = useContext(FilterContext)
   const { characters, setCharacters } = useContext(characterContext);
@@ -45,51 +14,77 @@ export default function Characters() {
 
   useEffect(() => {
 
+    async function getMoreCharacters(callback, filters, page) {
+      try {
+        const url = `https://rickandmortyapi.com/api/character/`;
+        const options = {
+          params: {
+            ...filters,
+            page: page,
+          },
+          headers: {
+            accept: "application/json",
+          },
+        };
+        const res = await axios.get(url, options)
+        // if the status is 200 then call the callback function and pass the data to it
+        if (res.status === 200) {
+          callback(res.data.results)
+        }
+        else if (res.status === 404) {
+          throw Error("404 Not Found")
+        }
+        else {
+          throw Error("Unknown Error")
+        }
+      } catch (error) {
+
+        // handle the error and show it to user
+        // console.log(error.message) 
+      }
+    }
+
     getMoreCharacters((newCharacters) => {
       setCharacters((prevCharacters) => [...prevCharacters, ...newCharacters]);
     }, filters, page)
-    // setPage and setCharacters are included here dure es-lint warning
   }, [filters, page])
 
   useEffect(() => {
     const handlePageEnd = () => setPage((prevPage) => prevPage + 1);
 
-    const Scroll = (() => {
-      let isLoading = false;
+    let isLoading = false;
 
-      // handlescrole funtionality
-      function handleScroll() {
-        if (isLoading) return;
+    // handlescrole funtionality
+    function handleScroll() {
+      if (isLoading) return;
 
-        const scrollTop =
-          document.documentElement?.scrollTop || document.body.scrollTop;
-        const scrollHeight =
-          document.documentElement?.scrollHeight || document.body.scrollHeight;
-        const clientHeight =
-          document.documentElement?.clientHeight || window.innerHeight;
-        const scrollToBottom =
-          Math.ceil(scrollTop + clientHeight + 200) >= scrollHeight;
+      const scrollTop =
+        document.documentElement?.scrollTop || document.body.scrollTop;
+      const scrollHeight =
+        document.documentElement?.scrollHeight || document.body.scrollHeight;
+      const clientHeight =
+        document.documentElement?.clientHeight || window.innerHeight;
+      const scrollToBottom =
+        Math.ceil(scrollTop + clientHeight + 200) >= scrollHeight;
 
-        if (scrollToBottom) {
-          isLoading = true;
+      if (scrollToBottom) {
+        isLoading = true;
 
-          // call the handlePageEnd function and increase the page number by 1 and then set the isLoading to false after 1 second
-          handlePageEnd();
-          setTimeout(() => {
-            isLoading = false;
-          }, 1000);
-        }
+        // call the handlePageEnd function and increase the page number by 1 and then set the isLoading to false after 1 second
+        handlePageEnd();
+        // now use the setTimeout function to set the isLoading to false after 1 second
+        // for this whole 1 second the isLoading will be true and more api calls will not be made
+        setTimeout(() => {
+          isLoading = false;
+        }, 1000);
       }
-      return {
-        handleScroll,
-      };
-    })();
+    }
 
     // add event listener to the window object to listen for scroll event and call the handleScroll function
-    window.addEventListener("scroll", Scroll.handleScroll);
+    window.addEventListener("scroll", handleScroll);
 
     return () => {
-      window.removeEventListener("scroll", Scroll.handleScroll);
+      window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
